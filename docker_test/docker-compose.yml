@@ -1,0 +1,48 @@
+# Use postgres/example user/password credentials
+version: '3.9'
+services:
+  flask-app:
+    build: .
+    volumes:
+      - .:/app
+      - /app/venv
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+    command: flask run --host=0.0.0.0
+
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:    #- type: tmpfs    #target: /dev/shm    #tmpfs:    #size: 134217728 #128*2^20 bytes = 128Mb
+    container_name: my_postgres
+    environment:
+      POSTGRES_USER: SuperUser
+      POSTGRES_PASSWORD: mysecretkey786
+      POSTGRES_DB: my_database
+    # volumes:
+    #   postgres-db:
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+
+volumes:
+  postgres-db:
+
+# networks:
+#   app-network:
+#     services:
+#       # - *api_service
+#       # - *postgres_service
+
+
+
+
